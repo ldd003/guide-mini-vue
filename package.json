@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "tojs": "tsc --ignoreConfig 1.ts --outFile 1.js"
   },
   "devDependencies": {
     "@babel/core": "^8.0.6",

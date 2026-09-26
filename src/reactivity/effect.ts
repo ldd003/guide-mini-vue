@@ -2,7 +2,10 @@ let targetMap = new Map();
 let activeEffect = null;
 
 class ReactiveEffect {
-  constructor(fn) {
+  constructor(
+    fn,
+    public scheduler?,
+  ) {
     this._fn = fn;
   }
   run() {
@@ -13,8 +16,8 @@ class ReactiveEffect {
   }
 }
 
-export function effect(fn) {
-  const _effect = new ReactiveEffect(fn);
+export function effect(fn, options = {}) {
+  const _effect = new ReactiveEffect(fn, options.scheduler);
   _effect.run();
   return _effect.run.bind(_effect);
 }
@@ -45,7 +48,11 @@ export function trigger(target, key) {
   let dep = depsMap.get(key);
   if (dep) {
     for (const effect of dep) {
-      effect.run();
+      if (effect.scheduler) {
+        effect.scheduler();
+      } else {
+        effect.run();
+      }
     }
   }
 }
