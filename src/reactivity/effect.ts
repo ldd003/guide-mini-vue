@@ -7,14 +7,16 @@ class ReactiveEffect {
   }
   run() {
     activeEffect = this;
-    this._fn();
+    const res = this._fn();
     activeEffect = null;
+    return res;
   }
 }
 
 export function effect(fn) {
   const _effect = new ReactiveEffect(fn);
   _effect.run();
+  return _effect.run.bind(_effect);
 }
 
 export function track(target, key) {
