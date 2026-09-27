@@ -1,6 +1,6 @@
 import { reactive } from "../reactive";
 
-describe("eractive", () => {
+describe("reactive", () => {
   it("happy path", () => {
     const origin = {
       foo: 1,
