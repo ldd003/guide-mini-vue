@@ -11,6 +11,10 @@ describe("readonly", () => {
     const wrapper = readonly(origin);
     expect(wrapper).not.toBe(origin);
     expect(wrapper.foo).toBe(1);
+    expect(isReadonly(wrapper)).toBe(true);
+    expect(isReadonly(origin)).toBe(false);
+    expect(isReadonly(wrapper.bar)).toBe(true);
+    expect(isReadonly(origin.bar)).toBe(false);
   });
 
   it("warn when call set", () => {
