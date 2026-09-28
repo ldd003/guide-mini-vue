@@ -3,6 +3,7 @@ import { hasChanged, isObject } from "../shared";
 import { reactive } from "./reactive";
 class refImpl {
   constructor(val) {
+    this.__v_isRef = true;
     this._rawValue = val;
     this.dep = new Set();
     this._value = convertValue(val);
@@ -32,4 +33,12 @@ function trackRefValue(ref) {
 
 export function ref(val) {
   return new refImpl(val);
+}
+
+export function isRef(val) {
+  return !!val.__v_isRef;
+}
+
+export function unRef(val) {
+  return isRef(val) ? val.value : val;
 }
