@@ -4,7 +4,7 @@ let targetMap = new Map();
 let activeEffect = null;
 let shouldTrack = null;
 
-class ReactiveEffect {
+export class ReactiveEffect {
   constructor(fn, scheduler) {
     this._fn = fn;
     this.scheduler = scheduler;
@@ -79,13 +79,8 @@ export function isTracking() {
 
 export function trigger(target, key) {
   let depsMap = targetMap.get(target);
-  if (!depsMap) {
-    return;
-  }
   let dep = depsMap.get(key);
-  if (dep) {
-    triggerEffect(dep);
-  }
+  triggerEffect(dep);
 }
 
 export function triggerEffect(dep) {
