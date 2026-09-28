@@ -15,5 +15,19 @@
     "babel-jest": "^30.5.2",
     "jest": "^30.5.2",
     "typescript": "^7.0.2"
-  }
+  },
+  "description": "",
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ldd003/guide-mini-vue.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/ldd003/guide-mini-vue/issues"
+  },
+  "homepage": "https://github.com/ldd003/guide-mini-vue#readme"
 }
