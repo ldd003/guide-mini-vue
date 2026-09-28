@@ -73,7 +73,7 @@ export function trackEffect(dep) {
   activeEffect.deps.push(dep);
 }
 
-function isTracking() {
+export function isTracking() {
   return shouldTrack && activeEffect !== undefined;
 }
 
