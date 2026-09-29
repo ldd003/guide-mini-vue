@@ -1,1 +1,1 @@
-{"version":3,"file":"vnode.d.ts","sourceRoot":"","sources":["../../../src/runtime-core/vnode.ts"],"names":[],"mappings":"AAAA,wBAAgB,WAAW,CAAC,IAAI,KAAA,EAAE,KAAK,CAAC,KAAA,EAAE,QAAQ,CAAC,KAAA;;;;EAOlD"}
+{"version":3,"file":"vnode.d.ts","sourceRoot":"","sources":["../../../src/runtime-core/vnode.ts"],"names":[],"mappings":"AAAA,wBAAgB,WAAW,CAAC,IAAI,KAAA,EAAE,KAAK,CAAC,KAAA,EAAE,QAAQ,CAAC,KAAA;;;;;EAQlD"}

@@ -14,15 +14,19 @@ function patch(vnode, container) {
 }
 
 function processElement(vnode, container) {
+  mountElement(vnode, container);
+}
+
+function mountElement(vnode, container) {
   const { type, props, children } = vnode;
-  const el = document.createElement(type);
+  const el = (vnode.el = document.createElement(type));
 
   for (let key in props) {
     el.setAttribute(key, props[key]);
   }
   if (typeof children === "string") {
     el.textContent = children;
-  } else {
+  } else if (Array.isArray(children)) {
     mountChildren(vnode, el);
   }
   container.append(el);
@@ -38,16 +42,19 @@ function processComponent(vnode, container) {
   mountComponent(vnode, container);
 }
 
-function mountComponent(vnode, container) {
-  const instance = createComponentInstance(vnode);
+function mountComponent(initialVnode, container) {
+  const instance = createComponentInstance(initialVnode);
   setupComponent(instance);
-  setupRenderEffect(instance, container);
+  setupRenderEffect(instance, initialVnode, container);
 }
 
-function setupRenderEffect(instance, container) {
-  const subTree = instance.render();
+function setupRenderEffect(instance, initialVnode, container) {
+  const { proxy } = instance;
+  const subTree = instance.render.call(proxy);
   // vnode->patch
   // vnode->element->mountElement
 
   patch(subTree, container);
+
+  initialVnode.el = subTree.el;
 }

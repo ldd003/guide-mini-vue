@@ -7,6 +7,9 @@ export const App = {
     };
   },
   render() {
+    queueMicrotask(() => {
+      console.log("$el---", this.$el);
+    });
     return h(
       "div",
       {
@@ -15,10 +18,7 @@ export const App = {
       },
       // "hi " + this.msg,
       // "hi mini-vue",
-      [
-        h("p", { class: "red" }, "hello"),
-        h("p", { class: "blue" }, "mini-vue"),
-      ],
+      [h("p", { class: "red" }, "hello"), h("p", { class: "blue" }, this.msg)],
     );
   },
 };
