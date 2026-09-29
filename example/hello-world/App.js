@@ -1,4 +1,5 @@
 import { h } from "../../lib/guide-mini-vue.esm.js";
+import { Foo } from "./Foo.js";
 
 export const App = {
   setup() {
@@ -23,17 +24,19 @@ export const App = {
         },
       },
       // "hi " + this.msg,
+      [h("div", {}, "hi" + this.msg), h(Foo, { count: 1 }, "")],
+      // ["hi " + this.msg, h(Foo)],
       // "hi mini-vue",
-      [
-        h(
-          "p",
-          {
-            class: "red",
-          },
-          "hello",
-        ),
-        h("p", { class: "blue" }, this.msg),
-      ],
+      // [
+      //   h(
+      //     "p",
+      //     {
+      //       class: "red",
+      //     },
+      //     "hello",
+      //   ),
+      //   h("p", { class: "blue" }, this.msg),
+      // ],
     );
   },
 };

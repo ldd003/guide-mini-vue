@@ -6,4 +6,5 @@ export declare const extend: {
 };
 export declare const isObject: (val: any) => boolean;
 export declare const hasChanged: (newVal: any, oldVal: any) => boolean;
+export declare function hasOwn(obj: {} | undefined, key: any): boolean;
 //# sourceMappingURL=index.d.ts.map

@@ -5,3 +5,6 @@ export const isObject = (val: any) => {
 export const hasChanged = (newVal, oldVal) => {
   return !Object.is(newVal, oldVal);
 };
+export function hasOwn(obj = {}, key) {
+  return Object.hasOwn(obj, key);
+}
