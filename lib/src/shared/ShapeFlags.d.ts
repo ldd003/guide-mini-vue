@@ -1,4 +1,4 @@
-export declare const enum ShapeFlages {
+export declare const enum ShapeFlags {
     ELEMENT = 1,// 0001
     STATEFULL_COMPONENT = 2,//0010
     TEXT_CHILDREN = 4,//0100

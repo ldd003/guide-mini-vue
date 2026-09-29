@@ -15,10 +15,25 @@ export const App = {
       {
         id: "root",
         class: ["red", "big"],
+        onClick() {
+          console.log("click事件");
+        },
+        onMousedown() {
+          console.log("mousedown事件");
+        },
       },
       // "hi " + this.msg,
       // "hi mini-vue",
-      [h("p", { class: "red" }, "hello"), h("p", { class: "blue" }, this.msg)],
+      [
+        h(
+          "p",
+          {
+            class: "red",
+          },
+          "hello",
+        ),
+        h("p", { class: "blue" }, this.msg),
+      ],
     );
   },
 };
