@@ -1,2 +1,3 @@
-let a: string = 2;
-console.log(a);
+//mini-vue 出口
+
+export * from "./runtime-core";
