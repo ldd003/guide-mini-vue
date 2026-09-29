@@ -7,6 +7,18 @@ export const App = {
     };
   },
   render() {
-    return h("div", "hi " + this.msg);
+    return h(
+      "div",
+      {
+        id: "root",
+        class: ["red", "big"],
+      },
+      // "hi " + this.msg,
+      // "hi mini-vue",
+      [
+        h("p", { class: "red" }, "hello"),
+        h("p", { class: "blue" }, "mini-vue"),
+      ],
+    );
   },
 };
