@@ -2,15 +2,13 @@ import { h } from "../../lib/guide-mini-vue.esm.js";
 import { Foo } from "./Foo.js";
 
 export const App = {
-  render() {
-    return h("div", { id: "root" }, [
-      h("div", {}, "hello-" + this.msg),
-      h(Foo),
-    ]);
-  },
+  name: "App",
   setup() {
-    return {
-      msg: "world",
-    };
+    return {};
+  },
+  render() {
+    const app = h("div", {}, "app");
+    const foo = h(Foo);
+    return h("div", { class: "app" }, [app, foo]);
   },
 };
