@@ -1,10 +1,9 @@
+import { toHandleKey, camelize } from "../shared";
 export function emit(instance, event, ...args) {
   const { props } = instance;
-  const capitalizer = (e) => {
-    return e ? "on" + e.charAt(0).toUpperCase() + e.slice(1) : "";
-  };
-  const cEvent = capitalizer(event);
-  if (props[cEvent]) {
-    props[cEvent](...args);
+
+  const handlerName = toHandleKey(camelize(event));
+  if (props[handlerName]) {
+    props[handlerName](...args);
   }
 }

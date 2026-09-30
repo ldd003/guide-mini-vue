@@ -14,8 +14,8 @@ export const App = {
         "hello-" + this.msg,
       ),
       h(Foo, {
-        onAdd(p1, p2) {
-          console.log("add--- click", p1, p2);
+        onAddAge(p1, p2) {
+          console.log("onAddAge", p1, p2);
         },
       }),
     ]);
