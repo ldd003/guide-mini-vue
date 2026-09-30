@@ -25,7 +25,7 @@ function mountElement(vnode, container) {
   for (let key in props) {
     const isOn = /^on[A-Z]/.test(key);
     if (isOn) {
-      document.addEventListener(key.slice(2).toLocaleLowerCase(), props[key]);
+      el.addEventListener(key.slice(2).toLocaleLowerCase(), props[key]);
     } else {
       el.setAttribute(key, props[key]);
     }
