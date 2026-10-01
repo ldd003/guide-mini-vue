@@ -52,7 +52,29 @@ export function createRenderer(options) {
   }
 
   function patchElement(n1, n2, container, parentComponent) {
-    console.log(100, n1, n2);
+    const oldProps = n1.props || {};
+    const newProps = n2.props || {};
+    const el = (n2.el = n1.el);
+    patchProps(el, oldProps, newProps);
+  }
+
+  function patchProps(el, oldProps, newProps) {
+    if (oldProps !== newProps) {
+      for (const key in newProps) {
+        const prevProp = oldProps[key];
+        const nextProp = newProps[key];
+        if (prevProp !== nextProp) {
+          hostPatchProp(el, key, prevProp, nextProp);
+        }
+      }
+
+      for (const key in oldProps) {
+        // if (!newProps.hasOwnProperty(key)) {
+        if (!(key in newProps)) {
+          hostPatchProp(el, key, oldProps[key], null);
+        }
+      }
+    }
   }
 
   function mountElement(vnode, container, parentComponent) {
@@ -61,7 +83,7 @@ export function createRenderer(options) {
 
     for (let key in props) {
       const val = props[key];
-      hostPatchProp(el, key, val);
+      hostPatchProp(el, key, null, val);
     }
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       el.textContent = children;
