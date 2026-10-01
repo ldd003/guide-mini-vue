@@ -1,8 +1,9 @@
 import { h, ref } from "../../lib/guide-mini-vue.esm.js";
 
 export default {
+  name: "App",
   setup() {
-    const count = ref(1);
+    const count = ref(0);
     const add = () => {
       count.value++;
     };
@@ -13,15 +14,21 @@ export default {
     };
   },
   render() {
-    return h("div", {}, [
-      h("p", {}, "hello" + this.count),
-      h(
-        "button",
-        {
-          onClick: this.add,
-        },
-        "点击",
-      ),
-    ]);
+    return h(
+      "div",
+      {
+        id: "root",
+      },
+      [
+        h("p", {}, "count:" + this.count),
+        h(
+          "button",
+          {
+            onClick: this.add,
+          },
+          "点击",
+        ),
+      ],
+    );
   },
 };

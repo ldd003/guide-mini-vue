@@ -44,7 +44,15 @@ export function createRenderer(options) {
   }
 
   function processElement(n1, n2, container, parentComponent) {
-    mountElement(n2, container, parentComponent);
+    if (!n1) {
+      mountElement(n2, container, parentComponent);
+    } else {
+      patchElement(n1, n2, container, parentComponent);
+    }
+  }
+
+  function patchElement(n1, n2, container, parentComponent) {
+    console.log(100, n1, n2);
   }
 
   function mountElement(vnode, container, parentComponent) {
@@ -97,9 +105,9 @@ export function createRenderer(options) {
         const { proxy } = instance;
         const subTree = instance.render.call(proxy, instance);
         const prevSubTree = instance.subTree;
+        instance.subTree = subTree;
 
         patch(prevSubTree, subTree, container, instance);
-        instance.subTree = subTree;
       }
     });
   }
