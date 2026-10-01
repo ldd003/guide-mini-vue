@@ -143,7 +143,6 @@ export function createRenderer(options) {
     }
 
     //新的比旧的多
-    //-右侧多
     if (i > e1) {
       if (i <= e2) {
         const nextPos = e2 + 1;
@@ -154,8 +153,14 @@ export function createRenderer(options) {
         }
       }
     }
-    //-左侧多
-    // if()
+
+    //旧的比新的多
+    if (i > e2) {
+      while (i <= e1) {
+        hostRemove(c1[e1].el);
+        e1--;
+      }
+    }
   }
 
   function unmountChildren(children) {

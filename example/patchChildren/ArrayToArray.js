@@ -41,6 +41,8 @@ import { ref, h } from "../../lib/guide-mini-vue.esm.js";
 // i = 2, e1 = 1, e2 = 2
 const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
 const nextChildren = [
+  // h("p", { key: "X" }, "X"),
+  // h("p", { key: "Y" }, "Y"),
   h("p", { key: "A" }, "A"),
   h("p", { key: "B" }, "B"),
   h("p", { key: "C" }, "C"),
@@ -64,20 +66,22 @@ const nextChildren = [
 // 左侧
 // (a b) c
 // (a b)
-// i = 2, e1 = 2, e2 = 1
+// i = 2, e1 = 3, e2 = 1
 // const prevChildren = [
 //   h("p", { key: "A" }, "A"),
 //   h("p", { key: "B" }, "B"),
 //   h("p", { key: "C" }, "C"),
+//   h("p", { key: "D" }, "D"),
 // ];
 // const nextChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
 
 // 右侧
 // a (b c)
 // (b c)
-// i = 0, e1 = 0, e2 = -1
+// i = 0, e1 = 1, e2 = -1
 
 // const prevChildren = [
+//   h("p", { key: "D" }, "D"),
 //   h("p", { key: "A" }, "A"),
 //   h("p", { key: "B" }, "B"),
 //   h("p", { key: "C" }, "C"),
