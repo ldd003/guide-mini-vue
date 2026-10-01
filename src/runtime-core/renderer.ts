@@ -9,6 +9,8 @@ export function createRenderer(options) {
     createElement: hostCreateElement,
     patchProp: hostPatchProp,
     insert: hostInsert,
+    remove: hostRemove,
+    setElementText: hostSetElementText,
   } = options;
 
   function render(vnode, container) {
@@ -35,7 +37,7 @@ export function createRenderer(options) {
   }
 
   function processFragment(n1, n2, container, parentComponent) {
-    mountChildren(n2, container, parentComponent);
+    mountChildren(n2.children, container, parentComponent);
   }
   function processText(n1, n2, container) {
     const { children } = n2;
@@ -56,6 +58,7 @@ export function createRenderer(options) {
     const newProps = n2.props || {};
     const el = (n2.el = n1.el);
     patchProps(el, oldProps, newProps);
+    patchChildren(n1, n2, el, parentComponent);
   }
 
   function patchProps(el, oldProps, newProps) {
@@ -77,6 +80,36 @@ export function createRenderer(options) {
     }
   }
 
+  function patchChildren(n1, n2, container, parentComponent) {
+    const prevShapeFlag = n1.shapeFlag;
+    const c1 = n1.children;
+    const { shapeFlag } = n2;
+    const c2 = n2.children;
+
+    if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      if (prevShapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+        // array -> text
+        unmountChildren(n1.children);
+      }
+      // text -> text
+      if (c1 !== c2) {
+        hostSetElementText(container, c2);
+      }
+    } else {
+      if (prevShapeFlag & ShapeFlags.TEXT_CHILDREN) {
+        hostSetElementText(container, "");
+        mountChildren(c2, container, parentComponent);
+      }
+    }
+  }
+
+  function unmountChildren(children) {
+    for (let i = 0; i < children.length; i++) {
+      const el = children[i].el;
+      hostRemove(el);
+    }
+  }
+
   function mountElement(vnode, container, parentComponent) {
     const { type, props, children, shapeFlag } = vnode;
     const el = (vnode.el = hostCreateElement(type));
@@ -88,13 +121,13 @@ export function createRenderer(options) {
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
       el.textContent = children;
     } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-      mountChildren(vnode, el, parentComponent);
+      mountChildren(vnode.children, el, parentComponent);
     }
     hostInsert(el, container);
   }
 
-  function mountChildren(vnode, container, parentComponent) {
-    vnode.children.forEach((v) => {
+  function mountChildren(children, container, parentComponent) {
+    children.forEach((v) => {
       patch(null, v, container, parentComponent);
     });
   }
@@ -122,7 +155,6 @@ export function createRenderer(options) {
 
         initialVnode.el = subTree.el;
         instance.isMounted = true;
-        console.log("挂载");
       } else {
         const { proxy } = instance;
         const subTree = instance.render.call(proxy, instance);
