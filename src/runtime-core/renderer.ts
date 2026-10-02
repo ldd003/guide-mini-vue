@@ -152,13 +152,50 @@ export function createRenderer(options) {
           i++;
         }
       }
-    }
-
-    //旧的比新的多
-    if (i > e2) {
+    } else if (i > e2) {
+      //旧的比新的多
       while (i <= e1) {
-        hostRemove(c1[e1].el);
-        e1--;
+        hostRemove(c1[i].el);
+        i++;
+      }
+    } else {
+      //中间对比
+
+      let s1 = i;
+      let s2 = i;
+
+      let tobePatched = e2 - s2 + 1;
+      let patched = 0;
+
+      let keyToNewIndexMap = new Map();
+      for (let i = s2; i <= e2; i++) {
+        const nextChild = c2[i];
+        keyToNewIndexMap.set(nextChild.key, i);
+      }
+
+      for (let i = s1; i <= e1; i++) {
+        let prevChild = c1[i];
+        if (patched >= tobePatched) {
+          hostRemove(prevChild.el);
+          continue;
+        }
+        let newIndex = null;
+        if (prevChild.key != null && prevChild.key !== "") {
+          newIndex = keyToNewIndexMap.get(prevChild.key);
+        } else {
+          for (let j = s2; j <= e2; j++) {
+            if (isSameVNodeType(prevChild, c2[j])) {
+              newIndex = j;
+              break;
+            }
+          }
+        }
+        if (newIndex != null) {
+          patch(prevChild, c2[newIndex], container, parentComponent, null);
+          patched++;
+        } else {
+          hostRemove(prevChild.el);
+        }
       }
     }
   }
