@@ -4,6 +4,7 @@ import { Fragment, Text } from "./vnode";
 import { createAppAPI } from "./createApp";
 import { effect } from "../reactivity";
 import { shouldUpdateComponent } from "./componentUpdateUtils";
+import { queueJobs } from "./scheduler";
 
 function getSequence(arr: number[]): number[] {
   const p = arr.slice();
@@ -333,32 +334,39 @@ export function createRenderer(options) {
   }
 
   function setupRenderEffect(instance, initialVnode, container, anchor) {
-    instance.update = effect(() => {
-      if (!instance.isMounted) {
-        const { proxy } = instance;
-        const subTree = (instance.subTree = instance.render.call(
-          proxy,
-          instance,
-        ));
+    instance.update = effect(
+      () => {
+        if (!instance.isMounted) {
+          const { proxy } = instance;
+          const subTree = (instance.subTree = instance.render.call(
+            proxy,
+            instance,
+          ));
 
-        patch(null, subTree, container, instance, anchor);
+          patch(null, subTree, container, instance, anchor);
 
-        initialVnode.el = subTree.el;
-        instance.isMounted = true;
-      } else {
-        const { proxy, vnode, next } = instance;
-        if (next) {
-          next.el = vnode.el;
-          updateComponentPreRender(instance, next);
+          initialVnode.el = subTree.el;
+          instance.isMounted = true;
+        } else {
+          const { proxy, vnode, next } = instance;
+          if (next) {
+            next.el = vnode.el;
+            updateComponentPreRender(instance, next);
+          }
+
+          const subTree = instance.render.call(proxy, instance);
+          const prevSubTree = instance.subTree;
+          instance.subTree = subTree;
+
+          patch(prevSubTree, subTree, container, instance, anchor);
         }
-
-        const subTree = instance.render.call(proxy, instance);
-        const prevSubTree = instance.subTree;
-        instance.subTree = subTree;
-
-        patch(prevSubTree, subTree, container, instance, anchor);
-      }
-    });
+      },
+      {
+        scheduler() {
+          queueJobs(instance.update);
+        },
+      },
+    );
   }
 
   return {
