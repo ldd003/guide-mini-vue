@@ -4,6 +4,47 @@ import { Fragment, Text } from "./vnode";
 import { createAppAPI } from "./createApp";
 import { effect } from "../reactivity";
 
+function getSequence(arr: number[]): number[] {
+  const p = arr.slice();
+  const result = [0];
+  let i, j, u, v, c;
+  const len = arr.length;
+  for (i = 0; i < len; i++) {
+    const arrI = arr[i];
+    if (arrI !== 0) {
+      j = result[result.length - 1];
+      if (arr[j] < arrI) {
+        p[i] = j;
+        result.push(i);
+        continue;
+      }
+      u = 0;
+      v = result.length - 1;
+      while (u < v) {
+        c = (u + v) >> 1;
+        if (arr[result[c]] < arrI) {
+          u = c + 1;
+        } else {
+          v = c;
+        }
+      }
+      if (arrI < arr[result[u]]) {
+        if (u > 0) {
+          p[i] = result[u - 1];
+        }
+        result[u] = i;
+      }
+    }
+  }
+  u = result.length;
+  v = result[u - 1];
+  while (u-- > 0) {
+    result[u] = v;
+    v = p[v];
+  }
+  return result;
+}
+
 export function createRenderer(options) {
   const {
     createElement: hostCreateElement,
@@ -168,11 +209,19 @@ export function createRenderer(options) {
       let patched = 0;
 
       let keyToNewIndexMap = new Map();
+      const newIndexToOldIndexMap = new Array(tobePatched);
+
+      let maxNewIndexSofar = 0;
+      let moved = false;
+
+      for (let i = 0; i < tobePatched; i++) {
+        newIndexToOldIndexMap[i] = 0;
+      }
+
       for (let i = s2; i <= e2; i++) {
         const nextChild = c2[i];
         keyToNewIndexMap.set(nextChild.key, i);
       }
-
       for (let i = s1; i <= e1; i++) {
         let prevChild = c1[i];
         if (patched >= tobePatched) {
@@ -191,10 +240,35 @@ export function createRenderer(options) {
           }
         }
         if (newIndex != null) {
+          if (newIndex >= maxNewIndexSofar) {
+            maxNewIndexSofar = newIndex;
+          } else {
+            moved = true;
+          }
+          newIndexToOldIndexMap[newIndex - s2] = i + 1;
           patch(prevChild, c2[newIndex], container, parentComponent, null);
           patched++;
         } else {
           hostRemove(prevChild.el);
+        }
+      }
+
+      const increasingNewIndexSequence = moved
+        ? getSequence(newIndexToOldIndexMap)
+        : [];
+      let j = increasingNewIndexSequence.length - 1;
+      for (let i = tobePatched - 1; i >= 0; i--) {
+        let nextIndex = s2 + i;
+        let nextChild = c2[nextIndex];
+        const anchor = nextIndex + 1 < l2 ? c2[nextIndex + 1].el : null;
+        if (newIndexToOldIndexMap[i] === 0) {
+          patch(null, nextChild, container, parentComponent, anchor);
+        } else if (moved) {
+          if (j < 0 || i !== increasingNewIndexSequence[j]) {
+            hostInsert(nextChild.el, container, anchor);
+          } else {
+            j--;
+          }
         }
       }
     }
