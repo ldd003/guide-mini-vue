@@ -1,13 +1,15 @@
 import { baseParse } from "../src/parse";
+import { NodeTypes } from "../src/ast";
+
 describe("parse", () => {
   describe("interpolation", () => {
     it("simple interpolation", () => {
-      const ast = baseParse("{{message}}   <div>");
+      const ast = baseParse("{{ message   }}   <div>");
 
       expect(ast.children[0]).toStrictEqual({
-        type: "intepolation",
+        type: NodeTypes.INTERPOLATION,
         content: {
-          type: "simple_expression",
+          type: NodeTypes.SIMPLE_EXPRESSION,
           content: "message",
         },
       });

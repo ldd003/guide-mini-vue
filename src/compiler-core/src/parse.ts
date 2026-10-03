@@ -1,3 +1,5 @@
+import { NodeTypes } from "./ast";
+
 export function baseParse(content) {
   const context = createParseContext(content);
   return createRoot(parseChildren(context));
@@ -14,22 +16,37 @@ function createRoot(children) {
 }
 function parseChildren(context) {
   const nodes = [];
-  const node = parseInterpolation(context);
+  let node;
+  if (context.source.startsWith("{{")) {
+    node = parseInterpolation(context);
+  }
   nodes.push(node);
   return nodes;
 }
 function parseInterpolation(context) {
-  const closeIndex = context.source.indexOf("}}", 2);
-  context.source = context.source.slice(2);
-  const rawContentLength = closeIndex - 2;
-  const content = context.source.slice(0, rawContentLength);
-  context.source = context.source.slice(rawContentLength + 2);
-  console.log(123, context.source);
+  const openDelimiter = "{{";
+  const closeDelimiter = "}}";
+
+  const closeIndex = context.source.indexOf(
+    closeDelimiter,
+    openDelimiter.length,
+  );
+
+  advanceBy(context, openDelimiter.length);
+  const rawContentLength = closeIndex - openDelimiter.length;
+  const rawContent = context.source.slice(0, rawContentLength);
+  const content = rawContent.trim();
+  advanceBy(context, rawContentLength + closeDelimiter.length);
+
   return {
-    type: "intepolation",
+    type: NodeTypes.INTERPOLATION,
     content: {
-      type: "simple_expression",
+      type: NodeTypes.SIMPLE_EXPRESSION,
       content,
     },
   };
+}
+
+function advanceBy(context, length) {
+  context.source = context.source.slice(length);
 }
