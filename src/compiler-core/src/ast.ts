@@ -1,7 +1,8 @@
 export const enum NodeTypes {
-  INTERPOLATION = "interpolation",
-  SIMPLE_EXPRESSION = "simple_expression",
-  ELEMENT = "element",
+  INTERPOLATION,
+  SIMPLE_EXPRESSION,
+  ELEMENT,
+  TEXT,
 }
 
 export const enum TagType {
