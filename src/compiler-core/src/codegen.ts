@@ -1,5 +1,10 @@
 import { NodeTypes } from "./ast";
-import { helperMaopName, TO_DISPLAY_STRING } from "./runTimeHelpers";
+import { isString } from "../../shared/index";
+import {
+  helperMaopName,
+  TO_CREATE_ELEMENT_VNODE,
+  TO_DISPLAY_STRING,
+} from "./runTimeHelpers";
 
 export function generate(ast) {
   const context = createCodegenContext();
@@ -48,7 +53,6 @@ function createCodegenContext() {
 }
 
 function genNode(node, context) {
-  debugger;
   switch (node.type) {
     case NodeTypes.TEXT:
       genText(node, context);
@@ -59,6 +63,14 @@ function genNode(node, context) {
 
     case NodeTypes.SIMPLE_EXPRESSION:
       genExpression(node, context);
+      break;
+
+    case NodeTypes.ELEMENT:
+      genElement(node, context);
+      break;
+
+    case NodeTypes.COMPOUND:
+      genCompound(node, context);
       break;
 
     default:
@@ -80,4 +92,31 @@ function genInterpolation(node, context) {
 function genExpression(node, context) {
   const { push } = context;
   push(`${node.content}`);
+}
+
+function genElement(node, context) {
+  const { push, helper } = context;
+  const { tag, children, props } = node;
+  // const child = children[0];
+  push(`${helper(TO_CREATE_ELEMENT_VNODE)}('${tag}'), ${props}, `);
+  // genNode(child, context);
+  // for (let i = 0; i < children.length; i++) {
+  //   let child = children[i];
+  //   genNode(child, context);
+  // }
+  genNode(children, context);
+}
+
+function genCompound(node, context) {
+  const { push } = context;
+  const { children } = node;
+
+  for (let i = 0; i < children.length; i++) {
+    let child = children[i];
+    if (isString(child)) {
+      push(child);
+    } else {
+      genNode(child, context);
+    }
+  }
 }

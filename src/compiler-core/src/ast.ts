@@ -4,6 +4,7 @@ export const enum NodeTypes {
   ELEMENT,
   TEXT,
   ROOT,
+  COMPOUND,
 }
 
 export const enum TagType {

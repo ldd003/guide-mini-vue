@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let arr = [3, 6, 9, 12, 7];
+
+      for (let i = 0; i < arr.length; i++) {
+        console.log(i, arr[i]);
+        if (arr[i + 1] && arr[i + 1] === 6) {
+          arr.splice(i + 1, 1);
+        }
+        // i--;
+      }
+    </script>
+  </body>
+</html>

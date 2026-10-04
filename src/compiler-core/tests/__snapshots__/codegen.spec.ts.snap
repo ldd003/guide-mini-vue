@@ -1,5 +1,10 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`codegen element 1`] = `
+"const { toDisplayString: _toDisplayString,toCreateElementVNode: _toCreateElementVNode } = vue
+return function render(_ctx, _cache){return _toCreateElementVNode('div'), null, 'hi,' + _toDisplayString(_ctx.message)}"
+`;
+
 exports[`codegen interpolation 1`] = `
 "const { toDisplayString: _toDisplayString } = vue
 return function render(_ctx, _cache){return _toDisplayString(_ctx.message)}"
