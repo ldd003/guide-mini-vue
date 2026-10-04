@@ -98,13 +98,32 @@ function genElement(node, context) {
   const { push, helper } = context;
   const { tag, children, props } = node;
   // const child = children[0];
-  push(`${helper(TO_CREATE_ELEMENT_VNODE)}('${tag}'), ${props}, `);
+  push(`${helper(TO_CREATE_ELEMENT_VNODE)}(`);
   // genNode(child, context);
   // for (let i = 0; i < children.length; i++) {
   //   let child = children[i];
   //   genNode(child, context);
   // }
-  genNode(children, context);
+  // genNode(children, context);
+  genNodeList(genNullable([tag, props, children]), context);
+  push(")");
+}
+function genNodeList(nodes, context) {
+  const { push } = context;
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    if (isString(node)) {
+      push(node);
+    } else {
+      genNode(node, context);
+    }
+    if (i < nodes.length - 1) {
+      push(", ");
+    }
+  }
+}
+function genNullable(args) {
+  return args.map((arg) => arg || "null");
 }
 
 function genCompound(node, context) {
