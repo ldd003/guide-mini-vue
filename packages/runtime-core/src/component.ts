@@ -1,0 +1,84 @@
+import { publicInstanceProxyHandlers } from "./componentPublicInstance";
+import { initProps } from "./componentProps";
+import { emit } from "./componentEmits";
+import { initSlots } from "./componentSlots";
+import { shallowReadonly, proxyRefs } from "@guide-mini-vue/reactivity";
+
+export function createComponentInstance(vnode, parent) {
+  const component = {
+    vnode,
+    next: null,
+    type: vnode.type,
+    setupState: {},
+    props: {},
+    slots: {},
+    emit: () => {},
+    provides: parent ? parent.provides : {},
+    parent,
+    subTree: {},
+    isMounted: false,
+  };
+
+  component.emit = emit.bind(null, component);
+  return component;
+}
+
+export function setupComponent(instance) {
+  initProps(instance, instance.vnode.props);
+  initSlots(instance, instance.vnode.children);
+  setupStatefulComponent(instance);
+}
+
+function setupStatefulComponent(instance) {
+  const Component = instance.type;
+  instance.proxy = new Proxy({ _: instance }, publicInstanceProxyHandlers);
+
+  const { setup } = Component;
+
+  if (setup) {
+    setCurrentInstance(instance);
+    const setupResult = setup(shallowReadonly(instance.props), {
+      emit: instance.emit,
+    });
+    setCurrentInstance(null);
+    handleSetupResult(instance, setupResult);
+  }
+}
+
+function handleSetupResult(instance, setupResult) {
+  if (typeof setupResult === "object") {
+    instance.setupState = proxyRefs(setupResult);
+  }
+  finishSetupComponent(instance);
+}
+
+function finishSetupComponent(instance) {
+  const Component = instance.type;
+
+  if (compiler && !Component.render) {
+    if (Component.template) {
+      Component.render = compiler(Component.template);
+
+      console.log(900, Component.render);
+    }
+  }
+
+  if (Component.render) {
+    instance.render = Component.render;
+  }
+}
+
+let currentInstance = null;
+
+export function getCurrentInstance() {
+  return currentInstance;
+}
+
+export function setCurrentInstance(instance) {
+  currentInstance = instance;
+}
+
+let compiler;
+export function registerRuntimeCompile(_compiler) {
+  compiler = _compiler;
+}

@@ -5,7 +5,7 @@
   "module": "lib/guide-mini-vue.esm.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
+    "test": "vitest",
     "tojs": "tsc --ignoreConfig 1.ts --outFile 1.js",
     "build": "rollup -c rollup.config.js"
   },
@@ -14,12 +14,10 @@
     "@babel/preset-env": "^8.0.6",
     "@babel/preset-typescript": "^8.0.1",
     "@rollup/plugin-typescript": "^12.3.0",
-    "@types/jest": "^30.0.0",
-    "babel-jest": "^30.5.2",
-    "jest": "^30.5.2",
     "rollup": "^4.63.5",
     "tslib": "^2.8.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^5.0.3"
   },
   "description": "",
   "directories": {

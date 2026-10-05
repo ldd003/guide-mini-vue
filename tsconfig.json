@@ -2,7 +2,7 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    // "rootDir": "./src",
+    "rootDir": "./packages",
     // "outDir": "./dist",
 
     // Environment Settings
@@ -19,7 +19,7 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "declarationDir": "lib",
+    "declarationDir": "packages/vue/dist",
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
@@ -41,5 +41,14 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+    "paths": {
+      "@guide-mini-vue/*": [
+        "./packages/*/src"
+      ]
+    }
+  },
+  "include": [
+    "packages/*/src",
+    "packages/*/__test__"
+  ]
 }
