@@ -1,4 +1,4 @@
-import { TO_CREATE_ELEMENT_VNODE } from "./runTimeHelpers";
+import { CREATE_ELEMENT_VNODE } from "./runTimeHelpers";
 
 export const enum NodeTypes {
   INTERPOLATION,
@@ -15,7 +15,7 @@ export const enum TagType {
 }
 
 export function createVNodeCall(context, tag, props, children) {
-  context.helper(TO_CREATE_ELEMENT_VNODE);
+  context.helper(CREATE_ELEMENT_VNODE);
 
   return {
     type: NodeTypes.ELEMENT,

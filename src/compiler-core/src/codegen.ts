@@ -2,7 +2,7 @@ import { NodeTypes } from "./ast";
 import { isString } from "../../shared/index";
 import {
   helperMaopName,
-  TO_CREATE_ELEMENT_VNODE,
+  CREATE_ELEMENT_VNODE,
   TO_DISPLAY_STRING,
 } from "./runTimeHelpers";
 
@@ -98,7 +98,7 @@ function genElement(node, context) {
   const { push, helper } = context;
   const { tag, children, props } = node;
   // const child = children[0];
-  push(`${helper(TO_CREATE_ELEMENT_VNODE)}(`);
+  push(`${helper(CREATE_ELEMENT_VNODE)}(`);
   // genNode(child, context);
   // for (let i = 0; i < children.length; i++) {
   //   let child = children[i];
